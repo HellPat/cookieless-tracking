@@ -1,0 +1,34 @@
+<iframe id="identity" src="{{ identify_url }}"></iframe>
+<script>
+    document.getElementById('identity').addEventListener('load', function(e) {
+        const STORAGE_KEY = 'app.tracking_id';
+        const userid = e.target.contentWindow.document.body.innerHTML;
+        const useridFromLogo = document.querySelector('#logo').contentDocument.querySelector('#userid').getAttribute('data-id');
+        const stored = window.localStorage.getItem(STORAGE_KEY);
+
+        if (null === stored) {
+            window.localStorage.setItem(STORAGE_KEY, userid)
+        }
+
+        if (stored !== userid) {
+            // TODO: we have to decide what to do here. The items deverged, whom do we trust now.
+            //       maybe it'd ba an option to send & store both ids whith a tracking request to
+            //       decide later in analytics
+            window.localStorage.setItem(STORAGE_KEY, userid);
+
+            console.warn(`Stored id ${stored} and id in iframe ${userid} diverged.`);
+        }
+        console.log('ID from Logo: '+useridFromLogo);
+
+        fetch('{{ pageview_url }}', {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                id: userid,
+                page: window.location.href
+            })
+        });
+    });
+</script>

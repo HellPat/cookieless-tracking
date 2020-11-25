@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+    </head>
+    <body>
+        {% block body %}
+            <object id="logo" type="image/svg+xml" data="{{ path('logo') }}" alt="" height="100" width="400"></object>
+            
+            <h1>{% block headline %}{% endblock %}</h1>
+            {% block content %}
+                <nav>
+                    <ul>
+                        <li><a href="{{ path('cart') }}">zum Warenkorb</a></li>
+                        <li><a href="{{ path('products', {product_id: random()}) }}">zu einem zufälligen Produkt</a></li>
+                    </ul>
+                </nav>
+            {% endblock %}
+        {% endblock %}
+        {% block tracking %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>
